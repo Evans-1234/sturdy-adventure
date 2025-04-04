@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechAlchemy App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Login Page -->
+    <section id="loginPage">
+        <h2>Customer Login</h2>
+        <!-- Logo Container -->
+        <div id="logoContainer">
+            <img src="app1.png" alt="Logo">
+        </div>
+        <p>Don't have an account? <a href="#" id="showRegister">Register</a></p>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p id="loginError" class="hidden" style="color: red;">Invalid email or password.</p>
+
+        <!-- Registration Section -->
+        <div id="registerSection" class="hidden">
+            <h2>Customer Registration</h2>
+            <form id="registerForm">
+                <input type="email" id="registerEmail" placeholder="Email" required>
+                <input type="text" id="registerPhone" placeholder="Phone Number" required>
+                <input type="password" id="registerPassword" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+    </section>
+
+    <!-- Main App (Hidden Initially) -->
+    <div id="mainApp" class="hidden">
+        <!-- Header Section -->
+        <header>
+            <h1>TechAlchemy Liquor Store App</h1>
+            <div>
+                <span id="welcomeMessage">Welcome, User!</span>
+                <button id="adminBtn">Admin Login</button>
+                <button id="viewCartBtn">View Cart</button>
+                <button id="logoutBtn">Logout</button>
+            </div>
+        </header>
+
+        <!-- Category Selection -->
+        <section id="categories">
+            <h2>Select a Category</h2>
+            <div class="category-list">
+                <button class="category" data-category="Wines">Wines</button>
+                <button class="category" data-category="Spirits">Spirits</button>
+                <button class="category" data-category="Tequila">Tequila</button>
+                <button class="category" data-category="Soft Drinks">Soft Drinks</button>
+                <button class="category" data-category="Vodka">Vodka</button>
+                <button class="category" data-category="Brandy">Brandy</button>
+                <button class="category" data-category="Whiskey">Whiskey</button>
+            </div>
+        </section>
+
+        <!-- Products Display -->
+        <section id="products" class="hidden">
+            <h2 id="product-title"></h2>
+            <!-- Search and Filter Container -->
+            <div class="search-filter-container">
+                <input type="text" id="searchBar" placeholder="Search products..." oninput="filterProducts()">
+                <select id="filterByPrice" onchange="filterProducts()">
+                    <option value="">Filter by Price</option>
+                    <option value="lowToHigh">Price: Low to High</option>
+                    <option value="highToLow">Price: High to Low</option>
+                </select>
+            </div>
+            <div class="product-list"></div>
+            <button id="backBtn">Back to Categories</button>
+        </section>
+
+        <!-- Admin Login Modal -->
+        <div id="adminModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Admin Login</h2>
+                <input type="password" id="adminPass" placeholder="Enter Admin Password">
+                <button id="loginAdmin">Login</button>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <section id="adminPanel" class="hidden">
+            <h2>Admin Dashboard</h2>
+            
+            <!-- Customer Management Section -->
+            <div id="customerManagement">
+                <h3>Customer Accounts</h3>
+                <table id="customerTable">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Total Purchases</th>
+                            <th>Total Spent</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerList"></tbody>
+                </table>
+            </div>
+            
+            <!-- Add New Product Section -->
+            <div id="addProductSection">
+                <h3>Add New Product</h3>
+                <form id="addProductForm">
+                    <select id="newProductCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Wines">Wines</option>
+                        <option value="Spirits">Spirits</option>
+                        <option value="Tequila">Tequila</option>
+                        <option value="Soft Drinks">Soft Drinks</option>
+                        <option value="Vodka">Vodka</option>
+                        <option value="Brandy">Brandy</option>
+                        <option value="Whiskey">Whiskey</option>
+                    </select>
+                    <input type="text" id="newProductName" placeholder="Product Name" required>
+                    <input type="number" id="newProductPrice" placeholder="Price (Ksh)" min="1" required>
+                    <input type="number" id="newProductQuantity" placeholder="Initial Stock" min="1" required>
+                    <label for="newProductImage">Product Image:</label>
+                    <input type="file" id="newProductImage" accept="image/*" required>
+                    <div id="imagePreview" class="hidden">
+                        <img id="previewImage" src="#" alt="Preview" style="max-width: 100px; max-height: 100px;">
+                    </div>
+                    <button type="submit">Add Product</button>
+                </form>
+            </div>
+            
+            <!-- Stock Management Section -->
+            <div id="stockManagement">
+                <h3>Stock Management</h3>
+                <table id="stockTable">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Product</th>
+                            <th>Stock</th>
+                            <th>Price (Ksh)</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockList"></tbody>
+                </table>
+            </div>
+
+            <!-- Customer Purchase History Section -->
+            <div id="customerPurchaseHistory">
+                <h3>Customer Purchase Details</h3>
+                <div id="customerPurchaseInfo"></div>
+                <table id="purchaseTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price (Ksh)</th>
+                            <th>Purchase Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="purchaseList"></tbody>
+                </table>
+            </div>
+
+            <!-- Admin Activity Log Section -->
+            <div id="adminActivityLog">
+                <h3>Admin Activity Log</h3>
+                <table id="activityLogTable">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Details</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityLogList"></tbody>
+                </table>
+            </div>
+
+            <!-- Logout Button -->
+            <button id="logoutAdmin">Logout</button>
+        </section>
+
+        <!-- Cart Modal -->
+        <div id="cartModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Your Cart</h2>
+                <div id="cartItems"></div>
+                <p id="cartTotal"></p>
+                <button id="checkoutBtn">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
